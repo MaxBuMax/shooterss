@@ -26,6 +26,20 @@ goal = 25
 
 num_fire = 0
 rel_time = False
+def pause(window):
+    run = True
+    font1 = font.Font(None, 35)
+    while run:
+        for e in event.get():
+            if e.type == KEYDOWN:
+                if e.key == K_p:
+                    run = False
+
+
+
+
+
+
 
 
 class GameSprite(sprite.Sprite):
@@ -152,70 +166,78 @@ bullets = sprite.Group()
 finish = False
 run = True 
 while run:
-   for e in event.get():
-       if e.type == QUIT:
+    for e in event.get():
+        if e.type == QUIT:
            run = False
-       elif e.type == KEYDOWN:
-           if e.key == K_SPACE and rel_time == False:
-                if num_fire < 5:
-                    fire_sound.play()
-                    ship.fire()
-                    num_fire += 1
+        if e.type == KEYDOWN:
+            if e.key == K_p:
+                pause(window)
+    
+
+
+
+
+        elif e.type == KEYDOWN:
+            if e.key == K_SPACE and rel_time == False:
+                    if num_fire < 5:
+                        fire_sound.play()
+                        ship.fire()
+                        num_fire += 1
+                    else:
+                        last_time = timer()
+                        rel_time = True
+
+
+    if not finish:
+            window.blit(background,(0,0))
+            text = font2.render("Счет: " + str(score), 1, (100, 100, 200))
+            window.blit(text, (30, 30))
+            text_lose = font2.render("Пропущено: " + str(lost), 1, (100, 100, 00))
+            window.blit(text_lose, (10, 65))
+            window.blit(mixfnt, (10, 200))
+
+
+            ship.update()
+            monsters.update()
+            bullets.update()
+            asters.update()
+            ship.reset()
+            monsters.draw(window)
+            bullets.draw(window)
+            asters.draw(window)
+            
+            collides = sprite.groupcollide(monsters, bullets, True, True)
+            collides1 = sprite.groupcollide(asters, bullets, False, True)
+            
+            for c in collides:
+                score += 1
+                monster = Enemy(img_enemy, randint(80, win_width - 80), -40, 80, 50, randint(1, 5))
+                monsters.add(monster)
+            if lost == max_lost:
+                finish = True
+                window.blit(lose, (200, 200))
+
+            if sprite.spritecollide(ship, monsters, False):
+                finish = True
+                window.blit(lose, (200, 200))
+            
+            if sprite.spritecollide(ship, asters, False):
+                finish = True
+                window.blit(lose, (400, 400))
+
+            if score >= goal:
+                finish = True
+                window.blit(win, (400,400))
+
+            if rel_time == True:
+                now_time = timer()
+                if now_time - last_time < 1:
+                    reload = font2.render("Reload", 1,(150,0,0))
+                    window.blit(reload, (190, 460))
                 else:
-                    last_time = timer()
-                    rel_time = True
-
-
-   if not finish:
-        window.blit(background,(0,0))
-        text = font2.render("Счет: " + str(score), 1, (100, 100, 200))
-        window.blit(text, (30, 30))
-        text_lose = font2.render("Пропущено: " + str(lost), 1, (100, 100, 00))
-        window.blit(text_lose, (10, 65))
-        window.blit(mixfnt, (10, 200))
-
-
-        ship.update()
-        monsters.update()
-        bullets.update()
-        asters.update()
-        ship.reset()
-        monsters.draw(window)
-        bullets.draw(window)
-        asters.draw(window)
-        
-        collides = sprite.groupcollide(monsters, bullets, True, True)
-        collides1 = sprite.groupcollide(asters, bullets, False, True)
-        
-        for c in collides:
-            score += 1
-            monster = Enemy(img_enemy, randint(80, win_width - 80), -40, 80, 50, randint(1, 5))
-            monsters.add(monster)
-        if lost == max_lost:
-            finish = True
-            window.blit(lose, (200, 200))
-
-        if sprite.spritecollide(ship, monsters, False):
-            finish = True
-            window.blit(lose, (200, 200))
-        
-        if sprite.spritecollide(ship, asters, False):
-            finish = True
-            window.blit(lose, (400, 400))
-
-        if score >= goal:
-            finish = True
-            window.blit(win, (400,400))
-
-        if rel_time == True:
-            now_time = timer()
-            if now_time - last_time < 1:
-                reload = font2.render("Reload", 1,(150,0,0))
-                window.blit(reload, (190, 460))
-            else:
-                num_fire = 0
-                rel_time = False
-        
-        display.update()
-        
-   time.delay(50)
+                    num_fire = 0
+                    rel_time = False
+            
+            display.update()
+            
+    time.delay(50)
