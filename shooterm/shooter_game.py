@@ -145,7 +145,7 @@ monsters = sprite.Group()
 
 asters = sprite.Group()
 for i in range(1, 6):
-   monster = Enemy(img_enemy, randint(12, win_width - 80), -200, 100, 50, randint(1, 6))
+   monster = Enemy(img_enemy, randint(15, win_width - 80), -200, 100, 50, randint(1, 6))
    monsters.add(monster)
 
 
@@ -164,8 +164,7 @@ while run:
             run = False
         if e.type == KEYDOWN:
             if e.key == K_p:
-                pause(window)
-            
+                pause(window) 
         elif e.type == KEYUP:
             if e.key == K_SPACE and rel_time == False:
                     if num_fire < 5:
