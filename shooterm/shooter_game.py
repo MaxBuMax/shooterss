@@ -35,13 +35,6 @@ def pause(window):
                 if e.key == K_p:
                     run = False
 
-
-
-
-
-
-
-
 class GameSprite(sprite.Sprite):
 
    def __init__(self, player_image, player_x, player_y, size_x, size_y, player_speed):
@@ -168,16 +161,12 @@ run = True
 while run:
     for e in event.get():
         if e.type == QUIT:
-           run = False
+            run = False
         if e.type == KEYDOWN:
             if e.key == K_p:
                 pause(window)
-    
-
-
-
-
-        elif e.type == KEYDOWN:
+            
+        elif e.type == KEYUP:
             if e.key == K_SPACE and rel_time == False:
                     if num_fire < 5:
                         fire_sound.play()
@@ -186,7 +175,6 @@ while run:
                     else:
                         last_time = timer()
                         rel_time = True
-
 
     if not finish:
             window.blit(background,(0,0))
